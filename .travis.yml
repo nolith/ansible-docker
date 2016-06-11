@@ -19,13 +19,12 @@ install:
 
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=../' >ansible.cfg
-  - whoami
 
 script:
   - ansible-playbook tests/test.yml -i tests/inventory -c local --syntax-check
-  - whoami
-  - ansible-playbook tests/test.yml -i tests/inventory -c local
+  - ansible-playbook tests/test.yml -i tests/inventory -c local --extra-vars='{"docker_users": ["travis"]}'
   - docker --version
+  - docker run -it alpine echo 'Hello World!'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
