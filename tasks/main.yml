@@ -1,0 +1,56 @@
+---
+- name: Debian add Docker repository and update apt cache
+  apt_repository:
+    repo: deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main
+    update_cache: yes
+    state: present
+  tags: [docker]
+
+- name: Debian Docker is present
+  apt:
+    name: docker-engine
+    state: latest
+    force: yes
+  tags: [docker]
+
+- name: Debian python-pip is present
+  apt: name=python-pip state=present
+  tags: [docker]
+
+- name: Debian docker-py is present
+  pip:
+    name: docker-py
+    version: 1.6.0
+    state: present
+  tags: [docker]
+
+- name: Debian files are present
+  template:
+    src: "{{ docker_cfg }}"
+    dest: "{{ docker_cfg_dest }}"
+  register: copy_result
+  tags: [docker]
+
+- name: detect systemd
+  set_fact:
+    is_systemd: "{{ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 15}}"
+
+- debug: var={{hostvars}}
+
+- name: systemd is reloaded
+  command: systemctl daemon-reload
+  when: copy_result|changed and is_systemd
+  tags: [docker]
+
+- name: users are added to the docker group
+  user: name={{ item }} group=docker append=yes
+  register: users_result
+  tags: [docker]
+  with_items: "{{ docker_users }}"
+
+- name: service is restarted
+  service:
+    name: docker
+    state: restarted
+  when: copy_result|changed or users_result|changed
+  tags: [docker]
