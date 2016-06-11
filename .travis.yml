@@ -15,14 +15,12 @@ install:
   - pip install ansible
   # Check ansible version
   - ansible --version
-  # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
   - mkdir -p group_vars
   - "printf 'docker_users: [ travis ]' > group_vars/all"
 
 script:
   - ansible-playbook tests/test.yml -i tests/inventory -c local --syntax-check
-  - ansible-playbook tests/test.yml -i tests/inventory -c local
+  - ansible-playbook -v tests/test.yml -i tests/inventory -c local
   - docker --version
   - docker run -it alpine echo 'Hello World!'
 
