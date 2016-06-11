@@ -9,8 +9,12 @@ services:
 install:
   - docker --version
 
+env:
+  - IMAGE="nolith/ansible-test" VERSION="ubuntu_14.04"
+  - IMAGE="nolith/ansible-test" VERSION="ubuntu_12.04"
+
 script:
-  - IMAGE="nolith/ansible-test" VERSION="ubuntu_14.04" ./tests/utils/run_test.sh
+  - ./tests/utils/run_test.sh
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
