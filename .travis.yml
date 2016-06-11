@@ -22,7 +22,7 @@ script:
   - ansible-playbook tests/test.yml -i tests/inventory -c local --syntax-check
   - ansible-playbook -v tests/test.yml -i tests/inventory -c local
   - docker --version
-  - docker run -it alpine echo 'Hello World!'
+  - sudo -E su $USER -c 'docker run -it alpine echo "Hello World!""
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
