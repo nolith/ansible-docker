@@ -13,6 +13,7 @@ echo "Committing container"
 docker commit ansible ${PUBLISH_IMAGE}:${VERSION}
 echo "Starting container"
 docker start ansible
+sleep 30
 echo "Testing container"
 docker exec -it ansible /bin/sh -c "docker run alpine echo 'docker works'"
 echo "Quay.io login"
