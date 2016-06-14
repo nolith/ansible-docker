@@ -4,5 +4,3 @@
   become_method: sudo
   roles:
     - nolith.docker
-  tasks:
-    - command: docker run alpine echo "docker works"

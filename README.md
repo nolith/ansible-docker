@@ -1,6 +1,8 @@
 nolith.docker
 =============
 
+[![Build Status](https://travis-ci.org/nolith/ansible-docker.svg?branch=master)](https://travis-ci.org/nolith/ansible-docker)
+
 The way I run docker.
 
 Role Variables

@@ -7,3 +7,9 @@ docker pull ${IMAGE_FULL}
 docker run --privileged -d --name ansible -v `pwd`:/data ${IMAGE_FULL}
 docker exec -it ansible /bin/sh -c "ansible-playbook /data/tests/test.yml -i /data/tests/inventory --syntax-check"
 docker exec -it ansible /bin/sh -c "ansible-playbook -v /data/tests/test.yml -i /data/tests/inventory -c local"
+docker stop ansible
+docker commit ansible ${PUBLISH_IMAGE}:${VERSION}
+docker start ansible
+docker exec -it ansible /bin/sh -c "docker run alpine echo 'docker works'"
+docker login -e="." -u="${QUAY_USER}" -p="${QUAY_TOKEN}" quay.io
+docker push ${PUBLISH_IMAGE}:${VERSION}
