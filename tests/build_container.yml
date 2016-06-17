@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - nolith.docker
+  tasks:
+    - lineinfile: dest=/etc/init/docker.conf regexp='^start on' line='start on runlevel [2345]'
+      when: is_systemd == False
