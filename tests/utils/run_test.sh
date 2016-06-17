@@ -14,7 +14,7 @@ docker commit ansible ${PUBLISH_IMAGE}:${VERSION}
 echo "Starting container"
 docker start ansible
 echo "Testing container"
-docker exec -it ansible /bin/sh -c "docker run alpine echo 'docker works'"
+docker exec -it ansible /bin/sh -c "sleep 10 && docker run alpine echo 'docker works'"
 echo "Quay.io login"
 docker login -e="." -u="${QUAY_USER}" -p="${QUAY_TOKEN}" quay.io
 echo "Publishing container"
