@@ -4,3 +4,14 @@
   become_method: sudo
   roles:
     - nolith.docker
+  tasks:
+    - name: DockerUI
+      docker:
+        image: uifd/ui-for-docker
+        name: dockerui
+        ports: 9000:9000
+        privileged: yes
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+      when: not skip_ui is defined
+      tags: [docker]
