@@ -28,6 +28,10 @@
     state: present
   tags: [docker]
 
+- name: systemd dropin
+  file: dest=/etc/systemd/system/docker.service.d/ state=directory
+  when: is_systemd
+
 - name: Debian files are present
   template:
     src: "{{ docker_cfg }}"
@@ -35,9 +39,17 @@
   register: copy_result
   tags: [docker]
 
+- name: systemd dropin
+  template:
+    src: docker-dropin.conf.j2
+    dest: /etc/systemd/system/docker.service.d/docker-dropin.conf
+  register: dropin_result
+  tags: [docker]
+  when: is_systemd
+
 - name: systemd is reloaded
   command: systemctl daemon-reload
-  when: copy_result|changed and is_systemd
+  when: is_systemd and (copy_result|changed or dropin_result|changed)
   tags: [docker]
 
 - name: users are added to the docker group
